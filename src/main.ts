@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AnyExceptionFilter } from '@common/exception.filters/any.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  app.useGlobalFilters(new AnyExceptionFilter());
+  await app.listen(process.env.PORT);
 }
 bootstrap();
