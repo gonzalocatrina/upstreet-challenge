@@ -11,5 +11,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "paths": {
+      "@src/*": ["src/*"],
+      "@driver.licence/*": ["src/driver.licence/*"],
+      "@common/*": ["src/common/*"],
+    }
   }
 }

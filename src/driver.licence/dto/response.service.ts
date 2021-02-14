@@ -1,4 +1,4 @@
-import { VerifyDocumentResult } from './verifyDocument.result';
+import { VerifyDocumentResult } from '@driver.licence/dto/verifyDocument.result';
 
 export class ResponseService {
   verifyDocumentResult: VerifyDocumentResult;

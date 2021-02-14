@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DriverLicenceModule } from './driver.licence/driver.licence.module';
+import { DriverLicenceModule } from '@driver.licence/driver.licence.module';
 
 @Module({
   imports: [

@@ -1,13 +1,11 @@
 import {
-  IsDate,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
-import { isDate } from 'util';
-import { State } from '../enum/state.enum';
+import { State } from '@driver.licence/enum/state.enum';
 
 export class ValidateUserDto {
   @IsNotEmpty()

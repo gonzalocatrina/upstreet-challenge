@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { ValidateUserDto } from './dto/validate.user.dto';
-import { State } from './enum/state.enum';
+import { State } from '@driver.licence/enum/state.enum';
 import { isValidDate } from 'iso-datestring-validator';
-import { ConstUtils } from 'src/commom/exception.filters/const.utils';
+import { ConstUtils } from '@common/const.utils';
 import { ConfigService } from '@nestjs/config';
-import { ResponseService } from './dto/response.service';
+import { ResponseService } from '@driver.licence/dto/response.service';
 import axios from 'axios';
 
 @Injectable()

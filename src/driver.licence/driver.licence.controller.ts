@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
-import { DriverLicenceService } from './driver.licence.service';
-import { UserInputDto } from './dto/user.input.dto';
+import { DriverLicenceService } from '@driver.licence/driver.licence.service';
+import { UserInputDto } from '@driver.licence/dto/user.input.dto';
 
 @Controller('drivers')
 export class DriverLicenceController {

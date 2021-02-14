@@ -1,4 +1,4 @@
-import { State } from '../enum/state.enum';
+import { State } from '@driver.licence/enum/state.enum';
 
 export class UserInputDto {
   birthDate: Date;
