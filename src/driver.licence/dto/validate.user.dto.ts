@@ -9,7 +9,7 @@ import { State } from '@driver.licence/enum/state.enum';
 
 export class ValidateUserDto {
   @IsNotEmpty()
-  birthDate: Date;
+  birthDate: string;
 
   @IsString()
   @MaxLength(100)
@@ -31,5 +31,5 @@ export class ValidateUserDto {
   state: State;
 
   @IsOptional()
-  expiryDate?: Date;
+  expiryDate?: string;
 }

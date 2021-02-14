@@ -17,13 +17,13 @@ export class DriverLicenceService {
   constructor(private readonly configService: ConfigService) {}
 
   async verificationOfLicense(
-    birthDate: Date,
+    birthDate: string,
     firstName: string,
     lastName: string,
     licenceNumber: string,
     state: State,
     middleName?: string,
-    expiryDate?: Date,
+    expiryDate?: string,
   ) {
     //Mapping input to object for validation
     let validateUserDto: ValidateUserDto = new ValidateUserDto();
@@ -72,12 +72,12 @@ export class DriverLicenceService {
   }
 
   //On real application, the validation pipes of Nestjs should do the job on the http requests
-  private async isInputValid(validateUserDto: ValidateUserDto) {
+  async isInputValid(validateUserDto: ValidateUserDto) {
     let valid = false;
     try {
       //First we check if the dates are valids
       if (
-        isValidDate(validateUserDto.birthDate.toString(), '-') &&
+        isValidDate(validateUserDto.birthDate, '-') &&
         this.verifyExpiredDate(validateUserDto.expiryDate)
       ) {
         //Validate all the other onformation
@@ -99,19 +99,19 @@ export class DriverLicenceService {
     return valid;
   }
 
-  private verifyExpiredDate(expiryDate: Date): boolean {
+  private verifyExpiredDate(expiryDate: string): boolean {
     let isValid = false;
     if (!expiryDate) {
       isValid = true;
     } else {
-      if (expiryDate && isValidDate(expiryDate.toString(), '-')) {
+      if (expiryDate && isValidDate(expiryDate, '-')) {
         isValid = true;
       }
     }
     return isValid;
   }
 
-  private async makeRequest(validateUserDto: ValidateUserDto) {
+  async makeRequest(validateUserDto: ValidateUserDto) {
     let responseService: ResponseService = new ResponseService();
     try {
       const headersRequest = {
