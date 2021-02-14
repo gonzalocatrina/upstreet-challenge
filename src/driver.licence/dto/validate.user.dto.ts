@@ -1,33 +1,37 @@
-import { IsDate, IsEnum, IsOptional, IsString, MaxLength } from "class-validator";
-import { isDate } from "util";
-import { State } from "../enum/state.enum";
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { isDate } from 'util';
+import { State } from '../enum/state.enum';
 
-export class ValidateUserDto{
+export class ValidateUserDto {
+  @IsNotEmpty()
+  birthDate: Date;
 
-    @IsDate()
-    birthDate:Date;
+  @IsString()
+  @MaxLength(100)
+  firstName: string;
 
-    @IsString()
-    @MaxLength(100)
-    firstName:string;
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  middleName?: string;
 
-    @IsString()
-    @IsOptional()
-    @MaxLength(100)
-    middleName?:string;
+  @IsString()
+  @MaxLength(100)
+  lastName: string;
 
-    @IsString()
-    @MaxLength(100)
-    lastName:string;
+  @IsString()
+  licenceNumber: string;
 
-    @IsString()
-    licenceNumber:string;
+  @IsEnum(State)
+  state: State;
 
-    @IsEnum(State)
-    state:State;
-
-    @IsDate()
-    @IsOptional()
-    expiryDate?:Date;
-    
+  @IsOptional()
+  expiryDate?: Date;
 }
