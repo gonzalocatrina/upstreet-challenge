@@ -1,14 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { ValidateUserDto } from './dto/validate.user.dto';
 import { State } from './enum/state.enum';
-import {
-  isValidDate,
-} from 'iso-datestring-validator';
+import { isValidDate } from 'iso-datestring-validator';
 import { ConstUtils } from 'src/commom/exception.filters/const.utils';
+import { ConfigService } from '@nestjs/config';
+import { ResponseService } from './dto/response.service';
+import axios from 'axios';
 
 @Injectable()
 export class DriverLicenceService {
+  constructor(private readonly configService: ConfigService) {}
+
   async verificationOfLicense(
     birthDate: Date,
     firstName: string,
@@ -30,8 +37,32 @@ export class DriverLicenceService {
     try {
       const valid = await this.isInputValid(validateUserDto);
       if (valid) {
+        let responseService: ResponseService = await this.makeRequest(
+          validateUserDto,
+        );
+        let response;
+        switch (responseService.verificationResultCode) {
+          case ConstUtils.Y:
+            response = { kycResult: true };
+            break;
+          case ConstUtils.N:
+            response = { kycResult: false };
+            break;
+          case ConstUtils.D:
+            response = {
+              code: ConstUtils.D,
+              message: ConstUtils.DOCUMENT_ERROR,
+            };
+            break;
+          case ConstUtils.S:
+            response = { code: ConstUtils.S, message: ConstUtils.SERVER_ERROR };
+            break;
+          default:
+            throw new BadRequestException();
+        }
+        return response;
       } else {
-        throw new BadRequestException();
+        throw new BadRequestException(ConstUtils.INVALID_INPUT_ERROR);
       }
     } catch (error) {
       if (error instanceof BadRequestException) {
@@ -40,7 +71,8 @@ export class DriverLicenceService {
     }
   }
 
-  async isInputValid(validateUserDto: ValidateUserDto) {
+  //On real application, the validation pipes of Nestjs should do the job on the http requests
+  private async isInputValid(validateUserDto: ValidateUserDto) {
     let valid = false;
     try {
       //First we check if the dates are valids
@@ -77,5 +109,42 @@ export class DriverLicenceService {
       }
     }
     return isValid;
+  }
+
+  private async makeRequest(validateUserDto: ValidateUserDto) {
+    let responseService: ResponseService = new ResponseService();
+    try {
+      const headersRequest = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.configService.get<string>('API_KEY')}`,
+      };
+
+      await axios
+        .post(
+          this.configService.get<string>('API_URL'),
+          {
+            birthDate: validateUserDto.birthDate,
+            givenName: validateUserDto.firstName,
+            middleName: validateUserDto.middleName,
+            familyName: validateUserDto.lastName,
+            licenceNumber: validateUserDto.licenceNumber,
+            stateOfIssue: validateUserDto.state,
+            expiryDate: validateUserDto.expiryDate,
+          },
+          { headers: headersRequest },
+        )
+        .then((response) => {
+          responseService = { ...response.data };
+          console.log(responseService);
+        })
+        .catch((error) => {
+          console.log(error);
+          throw new InternalServerErrorException();
+        });
+
+      return responseService;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
