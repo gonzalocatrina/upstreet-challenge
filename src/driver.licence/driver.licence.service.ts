@@ -72,7 +72,7 @@ export class DriverLicenceService {
   }
 
   //On real application, the validation pipes of Nestjs should do the job on the http requests
-  async isInputValid(validateUserDto: ValidateUserDto) {
+   async isInputValid(validateUserDto: ValidateUserDto) {
     let valid = false;
     try {
       //First we check if the dates are valids
